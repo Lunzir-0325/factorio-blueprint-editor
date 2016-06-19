@@ -7,6 +7,10 @@ To run, simply type
 npm install
 ```
 
+Then in [index.js](index.js) change "D:\\Program Files\\Factorio\\data" to the folder where Factorio is installed.
+
+Then run:
+
 ```
 node index
 ```
