@@ -23,9 +23,13 @@ renderer["inserter"] = function(entity){
 		src: entity.entity.hand_open_picture.filename,
 		width: entity.entity.hand_open_picture.width,
 		height: entity.entity.hand_open_picture.height,
+		scale: {
+			x: entity.entity.hand_size || 1,
+			y: 1
+		},
 		shift: {
 			x: 0,
-			y: -1
+			y: -.75
 		},
 		rotation: entity.direction * 45,
 		rotationOrigin: {

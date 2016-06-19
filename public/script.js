@@ -34,6 +34,31 @@ load('/files.json', function(err, files){
 	}
 });
 
+var animating = false;
+var animations = [];
+
+function startAnimations(){
+	function update(){
+		if(!animating){
+			return;
+		}
+		animations.forEach(function(animation){
+			if(!animation.image.style.backgroundPosition) animation.image.style.backgroundPosition = '0px 0px';
+			var position = animation.image.style.backgroundPosition.split(' ');
+			var value = parseInt(position[0]);
+			value += animation.settings.step;
+			if((animation.settings.maxValue > 0 && value > animation.settings.maxValue) || (animation.settings.maxValue < 0 && value < animation.settings.maxValue)){
+				value = animation.settings.minValue;
+			}
+			animation.image.style.backgroundPosition = value + 'px ' + position[1];
+		});
+		if(animating){
+			window.requestAnimationFrame(update);
+		}
+	}
+	animating = true;
+	window.requestAnimationFrame(update);
+}
 
 var textarea = document.createElement('textarea');
 textarea.onchange = function(){
@@ -111,19 +136,18 @@ function renderBlueprint(){
 	topLeft.y -= 2;
 	topLeft.x -= 2;
 	blueprintEntities = [];
+	animations = [];
+	animating = false;
 
-	var firstNotFound = true;
 	blueprint.entities.forEach(function(entity){
 		if(!renderer[entity.entity.type]){
-			if(firstNotFound){
-				firstNotFound = false;
-				console.log('Unknown entity type:', entity.entity.type);
-			}
-			//
+			console.log('Unknown entity type:', entity.entity.type, entity);
 		} else {
 			renderer[entity.entity.type](entity);
 		}
 	});
+	startAnimations();
+	/*
 	for(var x = Math.floor(topLeft.x + 2); x < bottomRight.x; x += 1){
 		for(var y = Math.floor(topLeft.y + 2); y < bottomRight.y; y += 1){
 			var div = document.createElement('div');
@@ -140,7 +164,7 @@ function renderBlueprint(){
 				image: div
 			});
 		}
-	}
+	}*/
 }
 
 function renderEntity(entity, options = {}){
@@ -154,6 +178,8 @@ function renderEntity(entity, options = {}){
 	var rotation = options.rotation;
 	var rotationOrigin = options.rotationOrigin;
 	var isHighPriority = !!options.highPriority;
+	var scale = options.scale || { x: 1, y: 1};
+	var animation = options.animation;
 
 	var div = document.createElement('div');
 	div.style.backgroundImage = "url('/image?src=" + src + "')";
@@ -181,6 +207,10 @@ function renderEntity(entity, options = {}){
 	if(rotationOrigin && rotation){
 		div.style.transformOrigin = (rotationOrigin.x * 100) + '% ' + (rotationOrigin.y * 100) + '%';
 		div.style.transform = 'rotate(' + rotation + 'deg)';
+	}
+
+	if(scale){
+		div.style.transform = 'scaleX(' + scale.x + ') scaleY(' + scale.y + ') ' + div.style.transform;
 	}
 
 	div.style.zIndex = Math.round(top + height);
@@ -211,6 +241,14 @@ function renderEntity(entity, options = {}){
 			image: innerDiv,
 			recipe: entity.recipe,
 			owner: entity
+		});
+	}
+
+	if(animation){
+		animations.push({
+			settings: animation,
+			image: div,
+			entity: entity
 		});
 	}
 }

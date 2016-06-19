@@ -6,7 +6,13 @@ renderer["transport-belt"] = function(entity){
 	var options = {
 		src: anim.filename,
 		width: anim.width,
-		height: anim.height
+		height: anim.height,
+		animation: {
+			property: 'offset.x',
+			minValue: 0,
+			step: -anim.width * 2,
+			maxValue: -anim.width * 32
+		}
 	};
 	var connections = {
 		left: entityExistsAt(entity.position.x - 1, entity.position.y, RIGHT8, ['transport-belt']),
