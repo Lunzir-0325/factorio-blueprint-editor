@@ -1,3 +1,10 @@
+var UP8 = 0,
+	RIGHT8 = 2,
+	DOWN8 = 4,
+	LEFT8 = 6;
+
+var renderer = {};
+
 function load(url, cb){
 	var request = new XMLHttpRequest();
 	request.open('GET', url);
@@ -72,12 +79,25 @@ document.body.appendChild(button);
 var blueprint = {};
 var blueprintEntities = [];
 var entities = [];
-var blueprintString = "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 49P/A4luUqQBJQEA";
+var blueprintString = "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";
 
+var topLeft, bottomRight;
 textarea.value = blueprintString;
+
+function entityExists(cb){
+	return blueprint.entities.some(cb);
+}
+function entityExistsAt(x, y, direction, types){
+	if(!Number.isInteger(direction)){
+		types = direction;
+		direction = -1;
+	}
+	if(!Array.isArray(types)) types = [types];
+	return entityExists(e => types.indexOf(e.entity.type) > -1 && e.position.x == x && e.position.y == y && (direction == -1 || e.direction == direction || (direction == 0 && !e.direction)));
+}
 function renderBlueprint(){
-	var topLeft = {x: 0, y: 0};
-	var bottomRight = {x: 0, y: 0};
+	topLeft = {x: 0, y: 0};
+	bottomRight = {x: 0, y: 0};
 	blueprint.entities.forEach(function(entity) {
 		topLeft.x = Math.min(topLeft.x, entity.position.x);
 		topLeft.y = Math.min(topLeft.y, entity.position.y);
@@ -91,126 +111,17 @@ function renderBlueprint(){
 	topLeft.y -= 2;
 	topLeft.x -= 2;
 	blueprintEntities = [];
+
+	var firstNotFound = true;
 	blueprint.entities.forEach(function(entity){
-		var src = "";
-		var width, height;
-		var shiftLeft = 0, shiftTop = 0;
-		if(entity.entity && entity.entity.off_animation){
-			src = entity.entity.off_animation.filename;
-			width = entity.entity.off_animation.width;
-			height = entity.entity.off_animation.height;
-			shiftLeft = entity.entity.off_animation.shift[0];
-			shiftTop = entity.entity.off_animation.shift[1];
-		} else if(entity.entity && entity.entity.platform_picture){
-			src = entity.entity.platform_picture.sheet.filename;
-			width = entity.entity.platform_picture.sheet.width;
-			height = entity.entity.platform_picture.sheet.height;
-		} else if(entity.entity && entity.entity.animations){
-			src = entity.entity.animations.filename;
-			width = entity.entity.animations.width;
-			height = entity.entity.animations.height;
-			if(entity.entity.animations.shift) {
-				shiftLeft = entity.entity.animations.shift[0];
-				shiftTop = entity.entity.animations.shift[1];
+		if(!renderer[entity.entity.type]){
+			if(firstNotFound){
+				firstNotFound = false;
+				console.log('Unknown entity type:', entity.entity.type);
 			}
-		} else if(entity.entity && entity.entity.animation && entity.entity.animation.filename){
-			src = entity.entity.animation.filename;
-			width = entity.entity.animation.width;
-			height = entity.entity.animation.height;
-			if(entity.entity.animation.shift) {
-				shiftLeft = entity.entity.animation.shift[0];
-				shiftTop = entity.entity.animation.shift[1];
-			}
-		} else if(entity.entity && entity.entity.animation && entity.entity.animation.north){
-			src = entity.entity.animation.north.filename;
-			width = entity.entity.animation.north.width;
-			height = entity.entity.animation.north.height;
-			if(entity.entity.animation.north.shift) {
-				shiftLeft = entity.entity.animation.north.shift[0];
-				shiftTop = entity.entity.animation.north.shift[1];
-			}
-		} else if(entity.entity && entity.type && entity.entity.structure){
-			var dir = entity.type == 'input' ? 'direction_in' : "direction_out";
-			src = entity.entity.structure[dir].sheet.filename;
-			width = entity.entity.structure[dir].sheet.width;
-			height = entity.entity.structure[dir].sheet.height;
-			if(entity.entity.structure[dir].sheet.shift) {
-				shiftLeft = entity.entity.structure[dir].sheet.shift[0];
-				shiftTop = entity.entity.structure[dir].sheet.shift[1];
-			}
-		} else if(entity.entity && entity.entity.pictures && entity.entity.pictures.filename){
-			src = entity.entity.pictures.filename;
-			width = entity.entity.pictures.width;
-			height = entity.entity.pictures.height;
-			if(entity.entity.pictures.shift) {
-				shiftLeft = entity.entity.pictures.shift[0];
-				shiftTop = entity.entity.pictures.shift[1];
-			}
-		} else if(entity.entity && entity.entity.picture){
-			src = entity.entity.picture.filename;
-			width = entity.entity.picture.width;
-			height = entity.entity.picture.height;
-			if(entity.entity.picture.shift) {
-				shiftLeft = entity.entity.picture.shift[0];
-				shiftTop = entity.entity.picture.shift[1];
-			}
-		} else if(entity.entity && entity.entity.structure){
-			src = entity.entity.structure.south.filename;
-			width = entity.entity.structure.south.width;
-			height = entity.entity.structure.south.height;
-		} else if(entity.entity && entity.entity.base){
-			src = entity.entity.base.filename;
-			width = entity.entity.base.width;
-			height = entity.entity.base.height;
-			if(entity.entity.base.shift) {
-				shiftLeft = entity.entity.base.shift[0];
-				shiftTop = entity.entity.base.shift[1];
-			}
+			//
 		} else {
-			console.log(JSON.stringify(entity));
-			return;
-		}
-		var div = document.createElement('div');
-		div.style.backgroundImage = "url('/image?src=" + src + "')";
-		div.style.position = 'absolute';
-
-		var left = entity.position.x - topLeft.x + shiftLeft;
-		var top = entity.position.y - topLeft.y + shiftTop;
-		left = left * 33 - width / 2;
-		top = top * 33 - height / 2;
-
-		div.style.left = left + 'px';
-		div.style.top =  top + 'px';
-		if(width) div.style.width = width + 'px';
-		if(height) div.style.height = height + 'px';
-		div.style.color = 'transparent';
-		setRotation(div, entity);
-		div.style.zIndex = Math.round(top + height);
-		div.innerText = entity.position.x + '/' + entity.position.y;
-		div.onclick = function(){
-			console.log(div, entity);
-		};
-		document.body.appendChild(div);
-		blueprintEntities.push({
-			image: div,
-			entity: entity
-		});
-
-		if(entity.recipe){
-			var innerDiv = document.createElement('div');
-			innerDiv.style.backgroundImage = "url('/image?src=" + (entity.recipe.icon || entity.recipe.entity.icon) + "')";
-			innerDiv.style.position = 'absolute';
-			innerDiv.style.zIndex = Math.round(top + height) + 1;
-			innerDiv.style.left = ((entity.position.x - topLeft.x) * 33 - 15) + 'px';
-			innerDiv.style.top = ((entity.position.y - topLeft.y) * 33 - 25) + 'px';
-			innerDiv.style.width = '32px';
-			innerDiv.style.height = '32px';
-			document.body.appendChild(innerDiv);
-			blueprintEntities.push({
-				image: innerDiv,
-				recipe: entity.recipe,
-				owner: entity
-			});
+			renderer[entity.entity.type](entity);
 		}
 	});
 	for(var x = Math.floor(topLeft.x + 2); x < bottomRight.x; x += 1){
@@ -218,10 +129,10 @@ function renderBlueprint(){
 			var div = document.createElement('div');
 			div.style.position = 'absolute';
 			div.style.border = '1px solid #000';
-			div.style.width = '33px';
-			div.style.height = '33px';
-			div.style.top = (y - topLeft.y) * 33 + 'px';
-			div.style.left = (x - topLeft.x) * 33 + 'px';
+			div.style.width = '32px';
+			div.style.height = '32px';
+			div.style.top = (y - topLeft.y) * 32 + 'px';
+			div.style.left = (x - topLeft.x) * 32 + 'px';
 			div.style.fontSize = '10pt';
 			div.innerText = x + '\n' + y;
 			document.body.appendChild(div);
@@ -232,107 +143,75 @@ function renderBlueprint(){
 	}
 }
 
-function isBelt(entity){
-	return entity.entity.type === 'transport-belt';
-}
+function renderEntity(entity, options = {}){
+	var src = options.src || '';
+	var shiftLeft = options.shift ? options.shift.x : 0;
+	var shiftTop = options.shift ? options.shift.y : 0;
+	var width = options.width || 0;
+	var height = options.height || 0;
+	var flip = options.flip || { x: false, y: false };
+	var imageOffset = options.offset || {x: 0, y: 0};
+	var rotation = options.rotation;
+	var rotationOrigin = options.rotationOrigin;
+	var isHighPriority = !!options.highPriority;
 
-function isUndergroundBelt(entity){
-	return entity.entity.type === "transport-belt-to-ground";
-}
+	var div = document.createElement('div');
+	div.style.backgroundImage = "url('/image?src=" + src + "')";
+	div.style.position = 'absolute';
 
-function isSplitter(entity){
-	return entity.entity.name === "splitter"
-}
+	var left = entity.position.x - topLeft.x + shiftLeft;
+	var top = entity.position.y - topLeft.y + shiftTop;
+	left = left * 32 - width / 2;
+	top = top * 32 - height / 2;
 
-function setRotation(div, entity){
-	if(isBelt(entity)) {
-		var facing = entity.direction || 0;
-		var y = 0;
-		var flipped = false;
-		switch (facing) {
-			case 0:
-				y = -40;
-				break;
-			case 2:
-				y = 0;
-				break;
-			case 4:
-				y = -40;
-				flipped = true;
-				break;
-			case 6:
-				y = 0;
-				flipped = true;
-				break;
-			default:
-				console.log('Unknown belt facing: ', facing);
-		}
+	div.style.left = left + 'px';
+	div.style.top =  top + 'px';
+	if(width) div.style.width = width + 'px';
+	if(height) div.style.height = height + 'px';
+	div.style.color = 'transparent';
+	if(imageOffset.x || imageOffset.y){
+		div.style.backgroundPosition = '-' + imageOffset.x + 'px -' + imageOffset.y + 'px';
+	}
+	if(flip && flip.x){
+		div.style.transform = 'rotateY(180deg)';
+	}
+	if(flip && flip.y){
+		div.style.transform = 'rotateX(180deg)';
+	}
+	if(rotationOrigin && rotation){
+		div.style.transformOrigin = (rotationOrigin.x * 100) + '% ' + (rotationOrigin.y * 100) + '%';
+		div.style.transform = 'rotate(' + rotation + 'deg)';
+	}
 
-		if(entity.direction == 2 || entity.direction == 6){
-			// horizontal, look for belts north and south of here that face into this
-			var beltFromNorth = blueprint.entities.find(e => e.position.x == entity.position.x
-				 && e.position.y === entity.position.y - 1
-				 && (isBelt(e) && e.direction == 4)
-			);
-			var beltFromSouth = blueprint.entities.find(e => e.position.x == entity.position.x
-				 && e.position.y === entity.position.y + 1
-				 && (isBelt(e) && !e.direction)
-			);
-			if(beltFromNorth != null && beltFromSouth == null){
-				// we have a belt from north
-				div.style.backgroundPosition = '0px -' + 360 + 'px';
+	div.style.zIndex = Math.round(top + height);
+	if(isHighPriority){
+		div.style.zIndex = Math.round(top + height) + 100;
+	}
+	div.innerText = entity.position.x + '/' + entity.position.y;
+	div.onclick = function(){
+		console.log(div, entity);
+	};
+	document.body.appendChild(div);
+	blueprintEntities.push({
+		image: div,
+		entity: entity
+	});
 
-				if (flipped) {
-					div.style.transform = 'rotateY(180deg)';
-				}
-			}
-			if(beltFromSouth != null && beltFromNorth == null){
-				// we have a belt from south
-				div.style.backgroundPosition = '0px -' + 440 + 'px';
-
-				if (flipped) {
-					div.style.transform = 'rotateY(180deg)';
-				}
-			}
-		} else {
-			// vertical, look for belts west and east of here that face into us
-			var beltFromWest = blueprint.entities.find(e => e.position.x == entity.position.x - 1
-				&& e.position.y === entity.position.y
-				&& (isBelt(e) && e.direction == 2)
-			);
-			var beltFromEast = blueprint.entities.find(e => e.position.x == entity.position.x + 1
-				&& e.position.y === entity.position.y
-				&& (isBelt(e) && e.direction == 6)
-			);
-			//if(beltFromEast != null && beltFromWest == null){
-			//	// we have a belt from east
-			//	div.style.backgroundPosition = '0px -' + 320 + 'px';
-			//}
-			//if(beltFromWest != null && beltFromEast == null) {
-			//	// we have a belt from west
-			//	div.style.backgroundPosition = '0px -' + 400 + 'px';
-			//}
-		}
-
-		if(!div.style.backgroundPosition) {
-			div.style.backgroundPosition = '0px ' + y + 'px';
-			if (flipped) {
-				div.style.transform = 'rotate(180deg)';
-			}
-		}
-	} else if(entity.name === 'express-transport-belt-to-ground' || entity.name === 'transport-belt-to-ground' || entity.name == 'fast-transport-belt-to-ground'){
-		var dir = entity.direction || 0;
-
-		if(entity.type == "output") {
-			dir -= 4;
-			if(dir < 0) dir += 8;
-		}
-		var x = (dir / 2) * 57;
-		div.style.backgroundPosition = '-' + x + 'px 0px';
-	} else {
-		if(!entity.direction) return;
-		//var rotation = entity.direction;
-		//div.style.transform = 'rotate(' + (-0.125 * rotation) + 'turn)';
+	if(entity.recipe){
+		var innerDiv = document.createElement('div');
+		innerDiv.style.backgroundImage = "url('/image?src=" + (entity.recipe.icon || entity.recipe.entity.icon) + "')";
+		innerDiv.style.position = 'absolute';
+		innerDiv.style.zIndex = Math.round(top + height) + 1;
+		innerDiv.style.left = ((entity.position.x - topLeft.x) * 32 - 15) + 'px';
+		innerDiv.style.top = ((entity.position.y - topLeft.y) * 32 - 25) + 'px';
+		innerDiv.style.width = '32px';
+		innerDiv.style.height = '32px';
+		document.body.appendChild(innerDiv);
+		blueprintEntities.push({
+			image: innerDiv,
+			recipe: entity.recipe,
+			owner: entity
+		});
 	}
 }
 
