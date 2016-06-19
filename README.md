@@ -11,4 +11,5 @@ npm install
 node index
 ```
 
-![Screenshot](http://puu.sh/o8mM6/e455c4f047.jpg)
+![Screenshot](http://puu.sh/py9gU/db5caa6840.jpg)
+![Screenshot](http://puu.sh/pycAi/0141e251d8.gif)
