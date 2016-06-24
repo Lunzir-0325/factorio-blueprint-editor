@@ -1,15 +1,19 @@
 var fs = require('fs');
+var http = require('http');
 
-require('./parser').parse('D:\\Program Files\\Factorio\\data').then(data => {
-	console.log('Parsed Factorio data files!');
-	for(var x in data){
-		fs.writeFile('output/' + data[x].name + '.json', JSON.stringify(data[x].data, undefined, 1));
-	}
-	fs.writeFile('public/files.json', JSON.stringify(data.map(d => 'data/' + d.name + '.json')));
-}).catch(err => {
-	console.log('error')
-	console.error(err.stack || err)
-});
+if(process.argv.some(a => a == '--generate' || a == '-g')) {
+	require('./parser').parse('D:\\Program Files\\Factorio\\data').then(data => {
+		console.log('Parsed Factorio data files!');
+		for (var x in data) {
+			fs.writeFile('output/' + data[x].name + '.json', JSON.stringify(data[x].data, undefined, 1));
+		}
+		fs.writeFile('public/files.json', JSON.stringify(data.map(d => 'data/' + d.name + '.json')));
+	}).catch(err => {
+		console.log('error')
+		console.error(err.stack || err)
+	});
+	return;
+}
 
 function sendFile(req, res, file, stat){
 	if(stat.mtime.getTime() == req.headers["if-none-match"]){
@@ -33,7 +37,6 @@ function sendFile(req, res, file, stat){
 	stream.pipe(res);
 }
 
-var http = require('http');
 http.createServer((req, res) => {
 	if(req.url.substring(0, '/image?src=__base__/'.length) == '/image?src=__base__/'){
 		var url = decodeURIComponent(req.url.substring('/image?src=__base__/'.length));
